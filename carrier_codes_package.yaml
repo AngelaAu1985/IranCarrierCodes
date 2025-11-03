@@ -1,0 +1,21 @@
+name: carrier_codes_manager
+version: 1.0.0
+description: |
+  🌐 A lightweight Dart/Flutter package for managing, validating, and analyzing mobile carrier codes.
+  Provides utilities for parsing, searching, and summarizing carrier number prefixes.
+author: Reza Torabi <reza@example.com>
+homepage: https://pub.dev/packages/carrier_codes_manager
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  lints: ^3.0.0
+
+flutter:
+  uses-material-design: false

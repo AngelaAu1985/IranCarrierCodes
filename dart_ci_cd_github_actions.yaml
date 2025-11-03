@@ -1,0 +1,56 @@
+name: Dart CI & Auto Publish
+
+on:
+  push:
+    branches: [ main ]
+    tags:
+      - 'v*.*.*'  # Auto publish when a version tag is pushed (e.g., v1.0.0)
+
+jobs:
+  test-and-analyze:
+    name: 🧪 Test & Analyze
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Dart SDK
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: 📥 Install dependencies
+        run: dart pub get
+
+      - name: 🧪 Run tests
+        run: dart test
+
+      - name: ✅ Static analysis
+        run: dart analyze
+
+      - name: 🎨 Format check
+        run: dart format --output=none --set-exit-if-changed .
+
+  publish:
+    name: 🚀 Publish to pub.dev
+    needs: test-and-analyze
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: 📦 Checkout repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Setup Dart SDK
+        uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - name: 🔐 Configure pub.dev credentials
+        env:
+          PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
+        run: |
+          mkdir -p ~/.config/dart
+          echo "$PUB_CREDENTIALS" > ~/.config/dart/pub-credentials.json
+
+      - name: 🚀 Publish package
+        run: dart pub publish --force
